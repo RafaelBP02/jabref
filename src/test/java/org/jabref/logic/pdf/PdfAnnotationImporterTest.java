@@ -142,5 +142,27 @@ public class PdfAnnotationImporterTest {
         assertEquals(Collections.singletonList(expected),
                 importer.importAnnotations(Path.of("src/test/resources/pdfs/minimal-polygon.pdf")));
     }
+
+   //Verificar se abre arquivo docx
+    @Test
+    public void invalidDocumentTypeDocx() {
+        assertEquals(Collections.emptyList(), importer.importAnnotations(Path.of("src/test/resources/pdfs/exampledocx.docx")));
+    }
+    // Testar o validador de caminho
+    @Test
+    public void invalidDocumentTypePdf() {
+        assertEquals(Collections.emptyList(), importer.importAnnotations(Path.of("src/test/resources/pdfs/notExist.pdf")));
+    }
+    // Verificar se ele consegue ler algum character especial
+    @Test
+    public void foxinoteSymbols() {
+        final FileAnnotation expectedLinkedAnnotation = new FileAnnotation("lynyus", LocalDateTime.of(2017, 5, 31, 15, 16, 1), 1,
+                "?,!,@,#,$,%,&,*", FileAnnotationType.HIGHLIGHT, Optional.empty());
+        final FileAnnotation expected = new FileAnnotation("lynyus", LocalDateTime.of(2017, 5, 31, 15, 16, 1), 1,
+                "TesteLeitura", FileAnnotationType.HIGHLIGHT, Optional.of(expectedLinkedAnnotation));
+        assertEquals(Collections.singletonList(expected),
+                importer.importAnnotations(Path.of("src/test/resources/pdfs/minimal-foxitnote-symbols.pdf")));
+    }
+
 }
 
